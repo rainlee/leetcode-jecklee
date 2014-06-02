@@ -1,60 +1,41 @@
-#include <iostream>
-using namespace std;
-
 /**
  * Definition for singly-linked list.
- **/
- struct ListNode {
-     int val;
-     ListNode *next;
-     ListNode(int x) : val(x), next(NULL) {}
- };
-
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/***
+ * 快慢指针找到倒数第n个节点
+ * 注意：1. n > lenl 的情况，不删除
+ *       2. n = lenl 的情况，删除头结点
+ *       3. 是否需要释放节点空间
+ ***/
 class Solution {
 public:
     ListNode *removeNthFromEnd(ListNode *head, int n) {
-        // IMPORTANT: Please reset any member data you declared, as
-        // the same Solution instance will be reused for each test case.
-
-        // 两个指针，一个先走n步，此时另外一个从头走
-        // 第一个指针到末尾是，第二个指针在倒数第n+1个
         if ((NULL == head) || (0 == n))
             return head;
-
-        ListNode *fast = head;
-        ListNode *slow = head;
-
-        while ((NULL != fast) && n--)  // fast 走n步
-            fast = fast->next;
-
-        if ((n > 0) && (NULL == fast))   // 链表长度小于n
+        
+        ListNode *pfast = head;
+        ListNode *pslow = head;
+        while (pfast && n--)
+            pfast = pfast->next;
+            
+        if ((n > 0) && (NULL == pfast))  // n > lenl
             return head;
-        else if ((n == 0) && (NULL == fast))
-            return head->next;           // 长度刚好为n，删除第一个
-
-        while (NULL != fast->next)
+        if ((n == 0) && (NULL == pfast)) // n = lenl
+            return head->next;
+        
+        while (pfast->next)   // pslow stops at (n+1)th
         {
-            slow = slow->next;
-            fast = fast->next;
+            pslow = pslow->next;
+            pfast = pfast->next;
         }
-
-        // 删除slow后面的结点
-        slow->next = slow->next->next;
-
+        
+        pslow->next = pslow->next->next; // remove pslow->next
+        
         return head;
     }
 };
-
-int main()
-{
-    ListNode *head = new ListNode(1);
-    Solution so;
-
-    ListNode *head2 = so.removeNthFromEnd(head, 1);
-
-    if (head2 == NULL)
-        cout << "empty list!" << endl;
-    else
-        cout << "the first node: " << head->val << endl;
-    return 0;
-}
