@@ -1,1 +1,4 @@
-leetcode solutions by lihaitao
+LeetCode
+============
+
+[`leetcode`](https://oj.leetcode.com/ "LeetCode") solutions by lihaitao
