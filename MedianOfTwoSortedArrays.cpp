@@ -66,10 +66,11 @@ public:
         int ib = k - ia;
         
         if (A[ia-1] < B[ib-1])       // remove A[0...ia-1] B[ib...n]
-            return findKthSortedArrays(A+ia, m-ia, B, ib, k - ia);
             //return findKthSortedArrays(A+ia, m-ia, B, n, k - ia);
+            return findKthSortedArrays(A+ia, m-ia, B, ib, k - ia);
         else if (A[ia-1] > B[ib-1])  // remove A[ia...m] B[0...ib-1]
-            return findKthSortedArrays(A, m, B+ib, n-ib, k - ib);
+            //return findKthSortedArrays(A, m, B+ib, n-ib, k - ib);
+            return findKthSortedArrays(A, ia, B+ib, n-ib, k - ib);
         else
             return A[ia-1];
     }
