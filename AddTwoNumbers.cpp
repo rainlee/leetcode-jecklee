@@ -13,8 +13,6 @@
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        if (!l1 && !l2 )
-            return NULL;
         if (!l1)
             return l2;
         if (!l2)
@@ -25,9 +23,9 @@ public:
         ListNode *node1 = l1;
         ListNode *node2 = l2;
         int c = 0;
-        while (node1 || node2)
+        while (node1 || node2 || c)
         {
-            int d = 0;
+            int d = c;
             if (node1)
             {
                 d += node1->val;
@@ -38,17 +36,10 @@ public:
                 d += node2->val;
                 node2 = node2->next;
             }
-            d += c;
             c = d / 10;
-            d = d % 10;
-            ListNode *tmp = new ListNode(d);
-            node->next = tmp;
+            d %= 10;
+            node->next = new ListNode(d);
             node = node->next;
-        }
-        if (c)
-        {
-            ListNode *tmp = new ListNode(c);
-            node->next = tmp;
         }
         return dummy.next;
     }
