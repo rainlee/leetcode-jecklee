@@ -41,6 +41,8 @@ public:
  * 只需要记录相邻两行数据，用一维数组实现
  * 需要记录的值d[i, j-1] d[i-1, j] d[i-1, j-1]
  * 前两个都可以复用数组，d[i-1, j-1]需要额外的变量记录
+ * upper_left  upper
+ *  dp[j-1]    dp[j]
  ***/
 class Solution {
 public:
@@ -48,22 +50,22 @@ public:
         int n1 = word1.size();
         int n2 = word2.size();
         
-        vector<int> dp(n2+1, 0);
+        vector<int> dp(n2+1, 0);   // rolling array
         for (int j = 0; j <= n2; ++j)
             dp[j] = j;
         
         for (int i = 1; i <= n1; ++i)
         {
-            int upper_left = dp[0];  // caution!!!
-            dp[0] = i;               // init
+            int upper_left = dp[0];  // caution!!! save dp[i-1][j-1]
+            dp[0] = i;               // init dp[i][0]
             for (int j = 1; j <= n2; ++j)
             {
-                int upper = dp[j];   // upperleft for next row
+                int upper = dp[j];   // upperleft for next j
                 if (word1[i-1] == word2[j-1])
                     dp[j] = upper_left;
                 else
                     dp[j] = min(min(dp[j], dp[j-1]), upper_left) + 1;
-                upper_left = upper;  // update for next row
+                upper_left = upper;  // update for next j
             }
         }
         return dp[n2];
