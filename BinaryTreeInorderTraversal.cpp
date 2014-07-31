@@ -15,23 +15,14 @@
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode *root) {
-        if (NULL == root)
+        if (!root)
             return vtree;
-        return inTree(root);
-    }
-private:
-    vector<int> &inTree(TreeNode *root)
-    {
-        if (NULL == root)
-            return vtree;
-        
-        inTree(root->left);
+        inorderTraversal(root->left);
         vtree.push_back(root->val);
-        inTree(root->right);
-        
+        inorderTraversal(root->right);
         return vtree;
     }
-    
+private:
     vector<int> vtree;
 };
 */
@@ -45,31 +36,24 @@ private:
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode *root) {
-        if (NULL == root)
+        vector<int> vtree;
+        if (!root)
             return vtree;
             
         stack<TreeNode *> stree;
         TreeNode *node = root;
-        
-        while (node || (!stree.empty()))
+        while (node || !stree.empty())
         {
             while (node)
             {
                 stree.push(node);
-                node = node->left;
+                node = node->left;      // visit left
             }
-            if (!stree.empty())
-            {
-                node = stree.top();
-                stree.pop();
-                
-                vtree.push_back(node->val);  // visit cur node
-                
-                node = node->right;          // visit right child, may be null
-            }
+            node = stree.top();
+            stree.pop();
+            vtree.push_back(node->val); // visit root
+            node = node->right;         // visit right, may be null
         }
         return vtree;
     }
-private:
-    vector<int> vtree;
 };
