@@ -17,39 +17,30 @@ public:
         if (NULL == head)
             return NULL;
         
-        ListNode *phead = new ListNode(-1);
-        phead->next = head;
-        ListNode *pre = phead;
-        ListNode *cur = head;
-        
-        while (cur && (cur->val < x))
+        ListNode dummy(-1);
+        dummy.next = head;
+        ListNode *slow = &dummy;
+        while (slow->next && (slow->next->val < x))
+            slow = slow->next;
+    
+        ListNode *prefast = slow;
+        ListNode *fast = slow->next;
+        while (fast)
         {
-            pre = cur;
-            cur = cur->next;
-        }
-        
-        ListNode *tail1 = pre;  // find the head2
-        ListNode *head2 = cur;
-        
-        while (cur)
-        {
-            if (cur->val < x)
+            if (fast->val < x)
             {
-                pre->next = cur->next;
-                
-                tail1->next = cur;
-                cur->next = head2;
-                
-                tail1 = cur;
-                cur = pre->next;  // pre and head2 not changed
+                prefast->next = fast->next;
+                fast->next = slow->next;
+                slow->next = fast;
+                slow = slow->next;
+                fast = prefast->next;  // prefast stays still
             }
             else
             {
-                pre = cur;
-                cur = cur->next;
+                prefast = fast;
+                fast = fast->next;
             }
         }
-        
-        return phead->next;
+        return dummy.next;
     }
 };
