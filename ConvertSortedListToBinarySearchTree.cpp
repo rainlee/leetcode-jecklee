@@ -24,42 +24,33 @@
  ***/
 class Solution {
 public:
-    TreeNode *SL2BST(ListNode *head)
-    {
+    TreeNode *sortedListToBST(ListNode *head) {
         if (NULL == head)
             return NULL;
         
         // find mid of list
         ListNode *prenode = NULL;  // be used when break the list
-        ListNode *pslow = head;
-        ListNode *pfast = head;
-        
-        while (pfast && pfast->next)
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next)
         {
-            prenode = pslow;
-            pslow = pslow->next;
-            pfast = pfast->next->next;
+            prenode = slow;
+            slow = slow->next;
+            fast = fast->next->next;
         }
         
-        // new a TreeNode
-        TreeNode *root = new TreeNode(pslow->val);
-        
+        // new a TreeNode, and process the children recursivly
+        TreeNode *root = new TreeNode(slow->val);
         if (prenode)
         {
-            prenode->next = NULL;  // break the list
-            root->left = SL2BST(head);
+            prenode->next = NULL;    // break the list
+            root->left = sortedListToBST(head);
         }
         else
             root->left = NULL;
-        
-        root->right = SL2BST(pslow->next);  // right part
+            
+        root->right = sortedListToBST(slow->next);
         
         return root;
-    }
-    TreeNode *sortedListToBST(ListNode *head) {
-        if (NULL == head)
-            return NULL;
-        
-        return SL2BST(head);
     }
 };
