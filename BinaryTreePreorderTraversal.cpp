@@ -15,24 +15,14 @@
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode *root) {
-        if (NULL == root)
+        if (!root)
             return vtree;
-        
-        return preTree(root);
-    }
-private:
-    vector<int> &preTree(TreeNode *root)
-    {
-        if (NULL == root)
-            return vtree;
-        
         vtree.push_back(root->val);
-        preTree(root->left);
-        preTree(root->right);
-        
+        preorderTraversal(root->left);
+        preorderTraversal(root->right);
         return vtree;
     }
-    
+private:
     vector<int> vtree;
 };
 */
@@ -51,7 +41,6 @@ public:
         
         stack<TreeNode *> stree;
         TreeNode *node = root;
-        
         while (node || (!stree.empty()))
         {
             while (node)
@@ -60,13 +49,9 @@ public:
                 stree.push(node);             // push cur node
                 node = node->left;
             }
-            
-            if (!stree.empty())
-            {
-                node = stree.top();  // pop the parent node
-                stree.pop();
-                node = node->right;  // visit the right child
-            }
+            node = stree.top();  // pop the parent node
+            stree.pop();
+            node = node->right;  // visit the right child
         }
         return vtree;
     }
