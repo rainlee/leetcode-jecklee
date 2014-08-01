@@ -15,7 +15,8 @@
  * 再使用第二组快慢指针，一个从表头触发，另一个从环上相遇位置出发，一次走一步
  * 最终会在入口处相遇
  ***/
-class Solution {
+/*
+ class Solution {
 public:
     ListNode *detectCycle(ListNode *head) {
         if ((NULL == head) || (NULL == head->next))
@@ -44,5 +45,47 @@ public:
         }
         
         return pslow2;
+    }
+};
+*/
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *meetNode = hasCycle(head);
+        if (!meetNode)
+            return NULL;
+        return enterCycle(head, meetNode);
+    }
+private:
+    ListNode *hasCycle(ListNode *head)
+    {
+        if (!head)
+            return NULL;
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast)
+                return slow;
+        }
+        return NULL;
+    }
+    
+    ListNode *enterCycle(ListNode *head, ListNode *meetNode)
+    {
+        if (!head || !meetNode)
+            return NULL;
+        
+        ListNode *slow = head;
+        ListNode *fast = meetNode;
+        while (slow != fast)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        return slow;
     }
 };
