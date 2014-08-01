@@ -17,29 +17,24 @@
  ***/
 class Solution {
 public:
-    void flatlr(TreeNode *root, TreeNode * &prenode)  // prenode, last node; caution, prenode must be returned!!!
+    void flatten(TreeNode *root) {
+        TreeNode *last = NULL;
+        preorderTravel(root, last);
+    }
+private:
+    // caution, last node must be returned!!!
+    void preorderTravel(TreeNode *root, TreeNode *&last)
     {
         if (NULL == root)
             return;
-            
-        prenode->right = root;   // add cur node(root) to linked list
-        prenode = root;
+        TreeNode *rchild = root->right;  // right child will be replaced by lchild
+        if (last)     // add cur node(root) to linked list
+            last->right = root;
+        last = root;
         
-        TreeNode *rchild = root->right; // right child will be replaced by lchild
-        
-        flatlr(root->left, prenode);
-        root->left = NULL;            // update left child
-        
-        flatlr(rchild, prenode);
-    }
-    
-    void flatten(TreeNode *root) {
-        if (NULL == root)
-            return;
-        
-        TreeNode *prenode = new TreeNode(-1);  // fake prenode
-        flatlr(root, prenode);
-        
+        preorderTravel(root->left, last);
+        root->left = NULL;    // update left child
+        preorderTravel(rchild, last);
         return;
     }
 };
