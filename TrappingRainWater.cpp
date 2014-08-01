@@ -72,8 +72,8 @@ public:
  * 当栈为空 || 当前元素小于栈顶元素时入栈
  * 反之，出栈，并计算水深和容量；知道满足以上入栈条件
  * 之前计算容量的方法是纵向的，一次计算一列的容积
- * 本方法是横向的，出栈时A[s.top()] A[i]构成左右两边界，hl是左边一个柱子的高度
- * 算出高min(A[s.top()], A[i]) - hl，宽i - s.top() - 1的水带
+ * 本方法是横向的，出栈时A[s.top()] A[i]构成左右两边界，h是右边一个柱子的高度（计算高度差）
+ * 算出高min(A[s.top()], A[i]) - h，宽i - s.top() - 1的水带
  ***/
 class Solution {
 public:
@@ -90,15 +90,15 @@ public:
                 s.push(i++);
             else
             {
-                int hl = 0;
+                int h = 0;
                 while (!s.empty())
                 {
-                    int depth = min(A[i], A[s.top()]) - hl;   // hl is in left of s.top()
+                    int depth = min(A[i], A[s.top()]) - h;   // h is in right of s.top()
                     int width = i - s.top() - 1;
                     sum += depth * width;
-                    hl = A[s.top()];       // update hl
+                    h = A[s.top()];        // update h
                     
-                    if (A[s.top()] > A[i]) // process all bars in left of this A[s.top()]
+                    if (A[s.top()] > A[i]) // process all bars in right of this A[s.top()]
                         break;
                     else
                         s.pop();
