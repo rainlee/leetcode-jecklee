@@ -17,15 +17,15 @@ public:
         if ((NULL == head) || (NULL == head->next))
             return false;
         
-        ListNode *plow = head;
+        ListNode *pslow = head;
         ListNode *pfast = head;
         
         while (pfast && pfast->next)
         {
-            plow = plow->next;
+            pslow = pslow->next;
             pfast = pfast->next->next;
             
-            if (plow == pfast)
+            if (pslow == pfast)
                 return true;
         }
         return false;
