@@ -8,6 +8,7 @@
  * 3 多个连续空格，只保留一个
  * 为方便处理最后一段，第一翻转后再最后加一个空格，处理完了再去掉
  ***/
+/*
 class Solution {
 public:
     void reverseWords(string &s) {
@@ -54,5 +55,41 @@ private:
     {
         while (low < high)
             swap(s[low++], s[high--]);
+    }
+};
+*/
+
+/***
+ * 法2：用另外一个字符串来存变换后的结果
+ * 从前往后同样按空格分隔，将一个word直接添加到结果串的头
+ * 这样处理空格的逻辑更简单
+ * 时间复杂度O(n) 空间复杂度O(n)
+ * 注意word之间添加空格
+ * 法3：以上方法从后往前
+ ***/
+class Solution {
+public:
+    void reverseWords(string &s) {
+        if (s.empty())
+            return;
+        
+        string sret;
+        int i = 0;
+        while (i < s.size())
+        {
+            while ((i < s.size()) && (' ' == s[i]))
+                ++i;
+            if (i < s.size())
+            {
+                int start = i;
+                while ((i < s.size()) && (' ' != s[i]))
+                    ++i;
+                if (!sret.empty())
+                    sret = " " + sret;
+                sret = s.substr(start, i-start) + sret;
+            }
+        }
+        s = sret;
+        return;
     }
 };
