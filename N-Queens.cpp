@@ -55,6 +55,54 @@ private:
 };
 */
 
+/*
+// 法1的另一种实现
+class Solution {
+public:
+    vector<vector<string> > solveNQueens(int n) {
+        if (0 == n)
+            return nqueens;
+        vcols.resize(n);
+        vector<string> path;
+        dfs(n, path);
+        return nqueens;
+    }
+private:
+    vector<int> vcols;
+    vector<vector<string> > nqueens;
+    
+    void dfs(int n, vector<string> &path)
+    {
+        if (n == path.size())
+        {
+            nqueens.push_back(path);
+            return;
+        }
+        int deep = path.size();
+        for (int j = 0; j < n; ++j)
+        {
+            if (check(deep, j))
+            {
+                vcols[deep] = j;    // set the choosen col
+                string srow(n, '.');
+                srow[j] = 'Q';
+                path.push_back(srow);
+                dfs(n, path);
+                path.pop_back();
+            }
+        }
+        return;
+    }
+    bool check(int deep, int j)
+    {
+        for (int i = 0; i < deep; ++i)
+            if ((j == vcols[i]) || ((deep - i) == abs(j - vcols[i])))
+                return false;
+        return true;
+    }
+};
+*/
+
 /***
  * 法2：DFS 空间换时间
  * 在法1的基础上，每次除了记录行对应的列
@@ -223,3 +271,45 @@ private:
         return;
     }
 };
+
+/*
+// 法4的另一种实现
+class Solution {
+public:
+    vector<vector<string> > solveNQueens(int n) {
+        if (0 == n)
+            return nqueens;
+        vcols.resize(n);
+        vector<string> path;
+        dfs(n, 0, 0, 0, path);
+        return nqueens;
+    }
+private:
+    vector<int> vcols;
+    vector<vector<string> > nqueens;
+    
+    void dfs(int n, int col, int ld, int rd, vector<string> &path)
+    {
+        if (col == ((1<<n) - 1))
+        {
+            nqueens.push_back(path);
+            return;
+        }
+        int bvalid = ~(col | ld | rd);
+        for (int j = 0; j < n; ++j)
+        {
+            int pos = 1 << j;
+            if (bvalid & pos)
+            {
+                vcols[path.size()] = j;
+                string srow(n, '.');
+                srow[j] = 'Q';
+                path.push_back(srow);
+                dfs(n, col|pos, (ld|pos) >> 1, (rd|pos) << 1, path);
+                path.pop_back();
+            }
+        }
+        return;
+    }
+};
+*/
