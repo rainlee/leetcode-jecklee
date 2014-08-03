@@ -4,8 +4,8 @@
  * 通过DFS / BFS 遍历矩阵，将和边界联通的'O'用特殊字符'#'标识
  * 遍历完之后，将'#'还原为'O'，其他都置为'#'
  * '#'一方面标记'O'，另一方面标记已访问，去重
- * DFS 会超时……
  ***/
+const int directions[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 class Solution {
 public:
     void solve(vector<vector<char>> &board) {
@@ -46,6 +46,21 @@ private:
         return;
     }
     
+    void dfs2(vector<vector<char> > &board, int x, int y)
+    {
+        const int m = board.size();
+        const int n = board[0].size();
+        if ((x < 0) || (x >= m) || (y < 0) || (y >= n))
+            return;
+        if (board[x][y] != 'O')
+            return;
+            
+        board[x][y] = '#';
+        for (int i = 0; i < 4; ++i)
+            dfs2(board, x + directions[i][0], y + directions[i][1]);
+        return;
+    }
+    
     static void bfs(vector<vector<char>> &board, int row, int col) 
     {
         const int m = board.size();
@@ -70,6 +85,29 @@ private:
             qpath.push(make_pair(row, col+1));
         }
         
+        return;
+    }
+    
+    void bfs2(vector<vector<char> > &board, int x, int y)
+    {
+        const int m = board.size();
+        const int n = board[0].size();
+        
+        queue<pair<int, int> > q;
+        q.push(make_pair(x, y));
+        
+        while (!q.empty())
+        {
+            int row = q.front().first;
+            int col = q.front().second;
+            q.pop();
+            if ((row < 0) || (col < 0) || (row > m-1) || (col > n-1) || (board[row][col] != 'O'))
+                continue;
+            board[row][col] = '#';   // visited
+            
+            for (int i = 0; i < 4; ++i)
+                q.push(make_pair(row + directions[i][0], col + directions[i][1]));
+        }
         return;
     }
 };
