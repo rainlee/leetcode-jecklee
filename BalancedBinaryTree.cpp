@@ -45,28 +45,22 @@ public:
 class Solution {
 public:
     bool isBalanced(TreeNode *root) {
-        int dep;
-        return treeDepth(root, dep);
+        int h;
+        return isBalRec(root, h);
     }
-    
-    bool treeDepth(TreeNode *root, int &dep)
+private:
+    bool isBalRec(TreeNode *root, int &height)
     {
-        if (NULL == root)
+        if (!root)
         {
-            dep = 0;
+            height = 0;
             return true;
         }
-        
-        int depl, depr;
-        
-        if (!treeDepth(root->left, depl) || !treeDepth(root->right, depr))  // check children
+        int lh = 0;
+        int rh = 0;
+        if (!isBalRec(root->left, lh) || !isBalRec(root->right, rh))
             return false;
-        
-        int diff = abs(depl - depr);
-        if (diff > 1)
-            return false;
-        
-        dep = max(depl, depr) + 1;  // cal dep
-        return true;
+        height = max(lh, rh) + 1;
+        return (abs(lh - rh) <= 1);
     }
 };
