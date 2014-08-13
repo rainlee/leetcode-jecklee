@@ -12,6 +12,7 @@
  * 是".."则回退，其他的均保留（包括多个'.'）！
  * 为方便处理，在path末尾添加一个'/'
  ***/
+/*
 class Solution {
 public:
     string simplifyPath(string path) {
@@ -40,5 +41,33 @@ public:
             smppath += "/";
         
         return smppath;
+    }
+};
+*/
+// 方法不变
+class Solution {
+public:
+    string simplifyPath(string path) {
+        vector<string> vs;  // stack
+        path += '/';        // process the last seg
+        for (int i = 1; i < path.size(); )
+        {
+            int j = path.find('/', i);
+            string s = path.substr(i, j-i);
+            if (s == "..")
+            {
+                if (!vs.empty())
+                    vs.pop_back();
+            }
+            else if (!s.empty() && (s != "."))
+                vs.push_back(s);
+            i = j + 1;
+        }
+        string spaths;
+        for (int i = 0; i < vs.size(); ++i)
+            spaths += "/" + vs[i];
+        if (vs.empty())
+            spaths += "/";
+        return spaths;
     }
 };
