@@ -12,6 +12,7 @@
  * 等分链表，先排左边，再排右边
  * 然后左右两边归并
  ***/
+/*
 class Solution {
 public:
     ListNode *mergeL(ListNode *list1, ListNode *list2)
@@ -87,5 +88,58 @@ public:
             pnode = pnode->next;
         }
         return binSortL(head, n);
+    }
+};
+*/
+
+/***
+ * 法2：使用快慢指针找中点，然后断开前后两部分
+ * 先排前面 再排后面 然后merge
+ ***/
+class Solution {
+public:
+    ListNode *sortList(ListNode *head) {
+        if (!head || !(head->next))
+            return head;
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next && fast->next->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        ListNode *head2 = slow->next;
+        slow->next = NULL;
+        
+        ListNode *headl = sortList(head);
+        ListNode *headr = sortList(head2);
+        return mergeList(headl, headr);
+    }
+private:
+    ListNode *mergeList(ListNode *l1, ListNode *l2)
+    {
+        ListNode dummy(-1);
+        ListNode *node1 = l1;
+        ListNode *node2 = l2;
+        ListNode *node = &dummy;
+        while (node1 && node2)
+        {
+            if (node1->val <= node2->val)
+            {
+                node->next = node1;
+                node1 = node1->next;
+            }
+            else
+            {
+                node->next = node2;
+                node2 = node2->next;
+            }
+            node = node->next;
+        }
+        if (!node1)
+            node->next = node2;
+        if (!node2)
+            node->next = node1;
+        return dummy.next;
     }
 };
