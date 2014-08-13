@@ -12,6 +12,7 @@
  * 每次从前往后找一个合适的位置插入
  * 已经遍历的部分是有序的
  ***/
+/*
 class Solution {
 public:
     ListNode *insertionSortList(ListNode *head) {
@@ -52,5 +53,38 @@ public:
         //pnode->next = NULL;   // caution
         
         return phead->next;
+    }
+};
+*/
+
+// 和法1是一样的，练练手……
+class Solution {
+public:
+    ListNode *insertionSortList(ListNode *head) {
+        // foreach from head to tail to find the insertion place
+        if (!head || !(head->next))
+            return head;
+        
+        ListNode dummy(INT_MIN);
+        dummy.next = head;
+        ListNode *pre = head;
+        ListNode *node = head->next;
+        while (node)
+        {
+            ListNode *next = node->next;
+            ListNode *node2 = &dummy;  // foreach from head
+            while ((node2 != node) && (node2->next->val <= node->val))
+                node2 = node2->next;
+            if (node2 == node)
+                pre = node;     //  node stays still
+            else
+            {
+                node->next = node2->next;
+                node2->next = node;
+                pre->next = next;  // pre stays still
+            }
+            node = next;    // move on
+        }
+        return dummy.next;
     }
 };
