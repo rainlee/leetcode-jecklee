@@ -33,6 +33,7 @@ private:
  * 先访问根结点，根结点入栈，访问左孩子，直到左孩子为空
  * 出栈，回退，访问右孩子
  ***/
+/*
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode *root) {
@@ -57,4 +58,48 @@ public:
     }
 private:
     vector<int> vtree;
+};
+*/
+
+/***
+ * 法3：Morris, 空间O(1)
+ * 方法同中序遍历，代码只相差一行
+ * 中序遍历是第二次访问时输出，先序是第一次访问时输出
+ * 不是先走到最左孩子输出，而是先输出再往左走
+ * 另外右孩子的处理方法一样，左子树的最右孩子指向他的后继根
+ ***/
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode *root) {
+        vector<int> vtree;
+        if (!root)
+            return vtree;
+        TreeNode *node = root;
+        while (node)
+        {
+            if (!(node->left))       // the leftest leaf node
+            {
+                vtree.push_back(node->val);
+                node = node->right;
+            }
+            else
+            {
+                TreeNode *tmp = node->left;
+                while (tmp->right && (tmp->right != node))  // the rightest node of lchild
+                    tmp = tmp->right;
+                if (!(tmp->right))               // first visit
+                {
+                    vtree.push_back(node->val);  // visit root(node) before move to node->left
+                    tmp->right = node;           // connect to root
+                    node = node->left;
+                }
+                else                             // second visit
+                {
+                    tmp->right = NULL;           // break the connection
+                    node = node->right;
+                }
+            }
+        }
+        return vtree;
+    }
 };
