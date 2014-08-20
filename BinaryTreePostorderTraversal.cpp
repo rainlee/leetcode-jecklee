@@ -15,23 +15,14 @@
 class Solution {
 public:
     vector<int> postorderTraversal(TreeNode *root) {
-        if (NULL == root)
+        if (!root)
             return vtree;
-        
-        return postTree(root);
-    }
-private:
-    vector<int> &postTree(TreeNode *root)
-    {
-        if (NULL == root)
-            return vtree;
-        postTree(root->left);
-        postTree(root->right);
+        postorderTraversal(root->left);
+        postorderTraversal(root->right);
         vtree.push_back(root->val);
-        
         return vtree;
     }
-    
+private:
     vector<int> vtree;
 };
 */
@@ -44,6 +35,7 @@ private:
  * 有两个时刻需要出栈，当左右孩子为空时 & 当左右孩子都已访问时
  * 故每次出栈时，标记上一个已访问的结点
  ***/
+/*
 class Solution {
 public:
     vector<int> postorderTraversal(TreeNode *root) {
@@ -78,4 +70,85 @@ public:
     }
 private:
     vector<int> vtree;
+};
+*/
+
+/***
+ * 法3：Morris 时间复杂度O(n) 空间复杂度O(1)
+ * 后续遍历稍显复杂，需要建立一个临时节点dummy，令其左孩子是root。
+ * 并且还需要一个子过程，就是倒序输出某两个节点之间路径上的各个节点。
+ * 同样是一直往左走，到最左孩子，再往右走
+ * 第一次访问左子树的最右孩子时，将其连接到root上（后继）
+ * 第二次访问时，倒序输出从当前节点的左孩子到该前驱节点这条路径上的所有节点。
+ * 并且断开前驱节点和root
+ * 注意倒序输出需要先逆转链表，然后输出，之后再逆转链表
+ ***/
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode *root) {
+        if (!root)
+            return vtree;
+        
+        TreeNode dummy(-1);
+        dummy.left = root;
+        TreeNode *node = &dummy;
+        while (node)
+        {
+            if (!(node->left))
+                node = node->right;
+            else
+            {
+                TreeNode *tmp = node->left;
+                while (tmp->right && (tmp->right != node))
+                    tmp = tmp->right;
+                if (!(tmp->right))      // first visit
+                {
+                    tmp->right = node;  // connect
+                    node = node->left;
+                }
+                else
+                {
+                    reverseVisitNodes(node->left, tmp);
+                    tmp->right = NULL;  // break
+                    node = node->right;
+                }
+            }
+        }
+        return vtree;
+    }
+private:
+    vector<int> vtree;
+    
+    void reverseTreeList(TreeNode *start, TreeNode *end)
+    {
+        if (start == end)
+            return;
+        TreeNode *pre = start;
+        TreeNode *cur = start->right;
+        while (true)
+        {
+            TreeNode *next = cur->right;
+            cur->right = pre;
+            if (cur == end)
+                break;
+            pre = cur;
+            cur = next;
+        }
+    }
+    // visit nodes from end to start
+    void reverseVisitNodes(TreeNode *start, TreeNode *end)
+    {
+        if (!start)
+            return;
+        reverseTreeList(start, end);
+        TreeNode *node = end;
+        while (true)
+        {
+            vtree.push_back(node->val);
+            if (node == start)
+                break;
+            node = node->right;
+        }
+        reverseTreeList(end, start);   // reduce
+    }
 };
