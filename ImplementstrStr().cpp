@@ -31,6 +31,37 @@ public:
 };
 */
 
+// 法1的另一种实现 O(n^2)
+/*
+class Solution {
+public:
+    char *strStr(char *haystack, char *needle) {
+        const int lenh = strlen(haystack);
+        const int lenn = strlen(needle);
+        
+        int i = 0;
+        int j = 0;
+        while ((i < lenh) && (j < lenn))
+        {
+            if (haystack[i] == needle[j])
+            {
+                ++i;
+                ++j;
+            }
+            else
+            {
+                i = i - j + 1;
+                j = 0;
+            }
+        }
+        if (j == lenn)
+            return haystack + (i - j);
+        else
+            return NULL;
+    }
+};
+*/
+
 /***
  * 法2: KMP  http://www.matrix67.com/blog/archives/115/
  *      BF 时间复杂度m*n，空间复杂度O(1)
@@ -66,7 +97,7 @@ private:
         next[0] = -1;
         int j = 0;
         int k = -1;
-        while (j < len)
+        while (j < len-1)
         {
             if ((-1 == k) || (T[j] == T[k]))  // start || match
             {
