@@ -94,10 +94,10 @@ private:
     void get_next(const char *T, vector<int> &next)
     {
         const int len = strlen(T);
-        next[0] = -1;
+        next[0] = -1;       // init!!!
         int j = 0;
         int k = -1;
-        while (j < len-1)
+        while (j < len-1)   // not lent here, maybe ++j later!!!
         {
             if ((-1 == k) || (T[j] == T[k]))  // start || match
             {
@@ -109,14 +109,35 @@ private:
                 k = next[k];  // back tracking
         }
     }
-    
+    void get_nextval(const char *T, vector<int> &next)
+    {
+        const int len = strlen(T);
+        next[0] = -1;       // init!!!
+        int j = 0;
+        int k = -1;
+        while (j < len-1)   // not lent here, maybe ++j later!!!
+        {
+            if ((-1 == k) || (T[j] == T[k]))  // start || match
+            {
+                ++k;
+                ++j;
+                if (T[j] != T[k])
+                    next[j] = k;
+                else
+                    next[j] = next[k];
+            }
+            else
+                k = next[k];  // back tracking
+        }
+    }    
     int kmp(const char *S, const char *T)
     {
         const int n = strlen(S);
         const int m = strlen(T);
         
         vector<int> next(m);
-        get_next(T, next);
+        //get_next(T, next);
+        get_nextval(T, next);
         
         int i = 0;
         int j = 0;
