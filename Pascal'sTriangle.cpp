@@ -1,5 +1,5 @@
 /***
- * 递推公式
+ * 递推公式 DP
  * triangle[i][j] = triangle[i-1][j-1] + triangle[i-1][j]
  * 两边的值为1
  ***/
