@@ -84,7 +84,8 @@ public:
                 digit <<= 1;
             }
             lldividend -= div;  // remainder
-            ret += digit;
+            //ret += digit;
+            ret |= digit;
         }
         return bneg ? -ret : ret;
     }
