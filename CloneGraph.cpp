@@ -11,6 +11,11 @@
  * 先复制当前节点，然后依次复制邻居
  * 使用DFS遍历图
  * 为避免重复制，用一个map记录已经复制的节点
+ * 扩展：如果是非连通图，则图定义如下
+ * struct Graph {
+ *     vector<GraphNode *> nodes;
+ * };
+ * 需要对每个nodes[i]调用cloneGraph()
  ***/
 /*
 class Solution {
