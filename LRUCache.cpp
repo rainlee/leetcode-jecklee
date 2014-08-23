@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /***
  * hash + list
  * 为了使查找、插入和删除都有较高的性能，我们使用一个双向链表(std::list) 和一个哈希表(std::unordered_map)
@@ -33,7 +55,13 @@ public:
     // set the cachenode, and move the node to head
     // if not exist, create a new node
     void set(int key, int value) {
-        if (mcache.find(key) == mcache.end())  // create a new node
+        if (mcache.find(key) != mcache.end())  // search the cache first
+        {
+            mcache[key]->value = value;    // update node value
+            lcache.splice(lcache.begin(), lcache, mcache[key]);  // move to head
+            mcache[key] = lcache.begin();  // update map
+        }
+        else
         {
             if (lcache.size() == capacity)  // no more space, delete the tail
             {
@@ -42,12 +70,6 @@ public:
             }
             lcache.push_front(CacheNode(key, value));  // add list node
             mcache[key] = lcache.begin();              // add map node
-        }
-        else
-        {
-            mcache[key]->value = value;    // update node value
-            lcache.splice(lcache.begin(), lcache, mcache[key]);  // move to head
-            mcache[key] = lcache.begin();  // update map
         }
         return;
     }
