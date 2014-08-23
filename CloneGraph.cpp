@@ -49,6 +49,29 @@ private:
 };
 */
 
+/*
+// 假如label可以重复，则需要记录原节点指针
+class Solution {
+public:
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        if (NULL == node)
+            return NULL;
+        if (mgraph.find(node) != mgraph.end())
+            return mgraph[node];
+        UndirectedGraphNode *clonenode = new UndirectedGraphNode(node->label);
+        mgraph[node] = clonenode;
+        for (int i = 0; i < (node->neighbors).size(); ++i)
+        {
+            UndirectedGraphNode *ngh = cloneGraph((node->neighbors)[i]);
+            (clonenode->neighbors).push_back(ngh);
+        }
+        return clonenode;
+    }
+private:
+    unordered_map<UndirectedGraphNode *, UndirectedGraphNode *> mgraph;
+};
+*/
+
 /***
  * 法2：BFS遍历图
  * 先node入队，然后邻居依次入队
