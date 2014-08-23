@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for a point.
  * struct Point {
@@ -61,43 +83,32 @@ public:
 class Solution {
 public:
     int maxPoints(vector<Point> &points) {
-        const int n = points.size();
-        if (n < 3)
-            return n;
-            
-        unordered_map<double, int> kmap;  // slope coefficient - count of lines
-        int maxcnt = 0;
-        for (int i = 0; i < n; ++i)
+        if (points.size() < 3)
+            return points.size();
+        
+        int maxp = 0;
+        for (int i = 0; i < points.size(); ++i)
         {
-            kmap.clear();
-            int samepoint = 0;  // same with points[i]
-            int maxsal = 1;     // max points in same line, 1 for i
-            for (int j = i+1; j < n; ++j) // line (i, j)
+            int samep = 1;     // same with points[i]
+            int maxcnt = 0;    // max points in same line
+            unordered_map<double, int> mslope;  // slope - cnt
+            for (int j = i+1; j < points.size(); ++j)
             {
-                double slope;
-                if (points[j].x == points[i].x)
+                double slope = 0;
+                if ((points[j].x == points[i].x) && (points[j].y == points[i].y))
                 {
-                    slope = std::numeric_limits<double>::infinity();   // x = c
-                    if (points[j].y == points[i].y)
-                    {
-                        ++samepoint;
-                        continue;
-                    }
+                    ++samep;
+                    continue;
                 }
+                else if (points[j].x == points[i].x)
+                    slope = std::numeric_limits<double>::infinity();
                 else
-                    slope = (double)(points[i].y - points[j].y) / (points[i].x - points[j].x);
-                int cnt = 0;
-                if (kmap.find(slope) != kmap.end())  // the line has existed
-                    cnt = ++kmap[slope];
-                else
-                {
-                    cnt = 2;
-                    kmap[slope] = 2;   // init
-                }
-                maxsal = max(maxsal, cnt);  // max points in same line, pass i
+                    slope = (double)(points[j].y - points[i].y) / (points[j].x - points[i].x);
+                ++mslope[slope];
+                maxcnt = max(maxcnt, mslope[slope]);
             }
-            maxcnt = max(maxcnt, maxsal + samepoint); // max points
+            maxp = max(maxp, samep + maxcnt);
         }
-        return maxcnt;
+        return maxp;
     }
 };
