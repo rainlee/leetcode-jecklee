@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for binary tree with next pointer.
  * struct TreeLinkNode {
@@ -80,6 +102,7 @@ public:
  * 法3：迭代 按层遍历
  * 同样利用完全二叉树的特点，用一个指针last记录上一个结点
  ***/
+/*
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
@@ -97,6 +120,33 @@ public:
                 level = level->next;               // next node in this level
             }
             node = node->left;  // next level
+        }
+        return;
+    }
+};
+*/
+
+/***
+ * 同样 迭代 按层遍历
+ * 同样利用完全二叉树的特点，不需要last指针
+ * 每次处理level的左右孩子，左孩子指向右孩子，右孩子指向level->next的左孩子
+ ***/
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+        TreeLinkNode *node = root;
+        while (node)
+        {
+            TreeLinkNode *level = node;
+            while (level)
+            {
+                if (level->left)
+                    level->left->next = level->right;
+                if (level->right && level->next)
+                    level->right->next = level->next->left;
+                level = level->next;
+            }
+            node = node->left;
         }
         return;
     }
