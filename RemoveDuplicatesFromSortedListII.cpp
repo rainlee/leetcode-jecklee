@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -13,6 +35,7 @@
  * ppre pstart ... pnode ...
  * 删除pstart到pnode相同的一段
  ***/
+/*
 class Solution {
 public:
     ListNode *deleteDuplicates(ListNode *head) {
@@ -44,5 +67,41 @@ public:
         }
         
         return phead->next;
+    }
+};
+*/
+
+/***
+ * 法2：重复的全删除，需要记录前驱节点
+ * 若next节点和当前不等，则向后移动
+ * 否则找到所有相等的点，删除，pre不动
+ * 因为头节点可能被删除，所以需要空头
+ ***/
+class Solution {
+public:
+    ListNode *deleteDuplicates(ListNode *head) {
+        if (!head || !(head->next))
+            return head;
+        
+        ListNode dummy(-1);
+        dummy.next = head;
+        ListNode *pre = &dummy;
+        ListNode *node = head;
+        while (node && node->next)
+        {
+            if (node->next && node->next->val != node->val)
+            {
+                pre = node;
+                node = node->next;
+            }
+            else
+            {
+                while (node->next && (node->val == node->next->val))
+                    node = node->next;
+                pre->next = node->next;
+                node = node->next;
+            }
+        }
+        return dummy.next;
     }
 };
