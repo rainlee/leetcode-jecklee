@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for binary tree
  * struct TreeNode {
@@ -58,6 +80,40 @@ public:
     }
 private:
     vector<int> vtree;
+};
+*/
+
+/***
+ * 非递归算法：同样是使用栈，先访问当前节点
+ * 接着右孩子入栈、左孩子入栈
+ * 然后处理左子树，即出栈，栈为空退出
+ ***/
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode *root) {
+        vector<int> vtree;
+        if(!root) 
+            return vtree;
+        stack<TreeNode *> s;
+        TreeNode *node = root;
+        while(node)
+        {
+            vtree.push_back(node->val);
+            if(node->right) 
+                s.push(node->right);
+            if(node->left) 
+                s.push(node->left);
+            
+            if(s.empty()) 
+                break;
+            else
+            {
+                node = s.top();
+                s.pop();
+            }
+        }
+        return vtree;
+    }
 };
 */
 
