@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /***
  * 最长回文子序列，可以得到逆序串t，然后s t用DP求最长公共子序列
  * 最长回文子串
@@ -93,29 +115,42 @@ public:
 };
 */
 
-// 动规，时间复杂度O(n^2)，空间复杂度O(n^2)
-// 超时……
+// 动规，时间复杂度O(n^2)，空间复杂度O(n)
+// 滚动数组，优化空间
+// vector会超时……
 /*
 class Solution {
 public:
     string longestPalindrome(string s) {
+        if (s.size() < 2)
+            return s;
         const int n = s.size();
-        bool f[n][n];
-        fill_n(&f[0][0], n * n, false);
-        // 用vector 会超时
-        //vector<vector<bool> > f(n, vector<bool>(n, false));
-        size_t max_len = 1, start = 0; // 最长回文子串的长度，起点
-        for (size_t i = 0; i < s.size(); i++) {
-            f[i][i] = true;
-            for (size_t j = 0; j < i; j++) { // [j, i]
-                f[j][i] = (s[j] == s[i] && (i - j < 2 || f[j + 1][i - 1]));
-                if (f[j][i] && max_len < (i - j + 1)) {
-                    max_len = i - j + 1;
-                    start = j;
+        //vector<bool> dp(n, false);
+        bool dp[n];
+        fill_n(&dp[0], n, false);
+        int maxl = 0;
+        int istart = 0;
+        for (int i = 0; i < n; ++i)
+        {
+            dp[i] = true;
+            for (int j = 0; j < i; ++j)
+            {
+                if (j == i - 1)
+                    dp[j] = (s[i] == s[j]);
+                else
+                    dp[j] = dp[j+1] && (s[i] == s[j]);
+                if (dp[j])
+                {
+                    int len = i - j + 1;
+                    if (len > maxl)
+                    {
+                        maxl = len;
+                        istart = j;
+                    }
                 }
             }
         }
-        return s.substr(start, max_len);
+        return s.substr(istart, maxl);
     }
 };
 */
@@ -135,30 +170,14 @@ public:
  *     若P[i_m] > R-i，则 P[i]至少等于R-i，然后向左右扩展
  * 若R <= i, 则P[i]从0开始扩展
  ***/
-string preProcess(string s)
-{
-    int n = s.size();
-    if (0 == n)
-        return "^$";
-    
-    string t = "^";
-    for (int i = 0; i < n; ++i)
-        //t += "#" + s[i];
-        t += "#" + s.substr(i, 1);
-    t += "#$";
-    
-    return t;
-}
-
 class Solution {
 public:
     string longestPalindrome(string s) {
-        int n = s.size();
-        if (n <= 1)
+        if (s.size() <= 1)
             return s;
         
         string t = preProcess(s);
-        n = t.size();
+        const int n = t.size();
         
         vector<int> P(n, 0);
         int C = 0;
@@ -187,5 +206,18 @@ public:
             }
         }
         return s.substr((maxi - 1 - maxl)/2, maxl);
+    }
+private:
+    string preProcess(const string &s)
+    {
+        const int n = s.size();
+        if (0 == n)
+            return "^$";
+        string t = "^";
+        for (int i = 0; i < n; ++i)
+            // t += "#" + (char)s[i];  // error
+            t += "#" + s.substr(i, 1);
+        t += "#$";
+        return t;
     }
 };
