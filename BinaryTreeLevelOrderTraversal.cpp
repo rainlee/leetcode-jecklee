@@ -14,6 +14,7 @@
  * 先访问根节点，然后左孩子入队 右孩子入队
  * 同时，用变量记录每一层的节点数 和 下一层的子结点数
  ***/
+/*
 class Solution {
 public:
     vector<vector<int> > levelOrder(TreeNode *root) {
@@ -60,4 +61,70 @@ public:
     }
 private:
     vector<vector<int> > vvtree;
+};
+*/
+
+/***
+ * 法2：为了分割各层，加入NULL作为一层的结尾
+ ***/
+/*
+class Solution {
+public:
+    vector<vector<int> > levelOrder(TreeNode *root) {
+        vector<vector<int> > vtree;
+        if (!root)
+            return vtree;
+        
+        queue<TreeNode *> qtree;
+        qtree.push(root);
+        qtree.push(NULL);      // as terminal
+        vector<int> vlevel;
+        while (true)
+        {
+            TreeNode *node = qtree.front();
+            qtree.pop();
+            if (!node)   // NULL
+            {
+                vtree.push_back(vlevel);
+                vlevel.clear();
+                if (qtree.empty())  // end
+                    break;
+                qtree.push(NULL);   // end of level
+            }
+            else
+            {
+                vlevel.push_back(node->val);  // save cur node
+                if (node->left)
+                    qtree.push(node->left);
+                if (node->right)
+                    qtree.push(node->right);
+            }
+        }
+        return vtree;
+    }
+};
+*/
+
+/***
+ * 法3：DFS 递归
+ * 中序遍历，注意初始化每层的vtree
+ ***/
+class Solution {
+public:
+    vector<vector<int> > levelOrder(TreeNode *root) {
+        levelOrderRec(root, 0);
+        return vtree;
+    }
+private:
+    vector<vector<int> > vtree;
+    void levelOrderRec(TreeNode *node, int level)
+    {
+        if (!node)
+            return;
+        if (vtree.size() <= level)
+            vtree.push_back(vector<int>());  // init
+        vtree[level].push_back(node->val);
+        levelOrderRec(node->left, level+1);
+        levelOrderRec(node->right, level+1);
+    }
 };
