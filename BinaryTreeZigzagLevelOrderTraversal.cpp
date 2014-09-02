@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for binary tree
  * struct TreeNode {
@@ -92,6 +114,7 @@ private:
  * 法2：不用这么麻烦……
  * 直接按层顺序遍历，然后偶数行的结果逆序
  ***/
+/*
 class Solution {
 public:
     vector<vector<int> > zigzagLevelOrder(TreeNode *root) {
@@ -142,4 +165,47 @@ public:
     }
 private:
     vector<vector<int> > vvtree;
+};
+*/
+
+/***
+ * 法3：NULL标识一行的结尾
+ ***/
+class Solution {
+public:
+    vector<vector<int> > zigzagLevelOrder(TreeNode *root) {
+        vector<vector<int> > vtree;
+        if (!root)
+            return vtree;
+        
+        queue<TreeNode *> qtree;
+        qtree.push(root);
+        qtree.push(NULL);
+        vector<int> vlevel;
+        while (true)
+        {
+            TreeNode *node = qtree.front();
+            qtree.pop();
+            if (node)
+            {
+                vlevel.push_back(node->val);
+                if (node->left)
+                    qtree.push(node->left);
+                if (node->right)
+                    qtree.push(node->right);
+            }
+            else
+            {
+                vtree.push_back(vlevel);
+                vlevel.clear();
+                if (qtree.empty())
+                    break;
+                qtree.push(NULL);
+            }
+        }
+        // reverse odd level
+        for (int i = 1; i < vtree.size(); i += 2)
+            reverse(vtree[i].begin(), vtree[i].end());
+        return vtree;
+    }
 };
