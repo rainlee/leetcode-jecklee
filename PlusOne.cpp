@@ -70,6 +70,30 @@ public:
 };
 */
 
+/*
+// 同2
+class Solution {
+public:
+    vector<int> plusOne(vector<int> &digits) {
+        if (digits.empty())
+            return digits;
+        
+        int c = 1;
+        for (int i = digits.size()-1; i >= 0; --i)
+        {
+            digits[i] += c;
+            c = digits[i] / 10;
+            digits[i] %= 10;
+            if (0 == c)
+                break;
+        }
+        if (c)
+            digits.insert(digits.begin(), c);
+        return digits;
+    }
+};
+*/
+
 /***
  * 法3：从后往前，找到第一个不为9的数，将其加1，其后的数全部变为0
  * 例如：12399 + 1 = 12400
