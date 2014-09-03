@@ -38,3 +38,25 @@ private:
         return;
     }
 };
+
+// 加一个虚头，可以不用判断上一个节点是否为空
+class Solution {
+public:
+    void flatten(TreeNode *root) {
+        TreeNode dummy(-1);
+        TreeNode *last = &dummy;
+        flattenRec(root, last);
+    }
+private:
+    void flattenRec(TreeNode *root, TreeNode *&last)  // preorder
+    {
+        if (!root)
+            return;
+        TreeNode *rchild = root->right;
+        last->right = root;
+        last = root;
+        flattenRec(root->left, last);
+        root->left = NULL;   // break left subtree here!!!
+        flattenRec(rchild, last);
+    }
+};
