@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /***
  * DP
  * 定义d[i, j] 表示word1的前i个字符和word2的前j个字符的最小编辑距离
@@ -69,5 +91,36 @@ public:
             }
         }
         return dp[n2];
+    }
+};
+
+// 注意dp数组的长度 和 初始化
+// dp[i][j] 表示 word1[0, i) 和 word2[0, j) 的编辑距离
+//           / dp[i-1]dp[j-1], word1[i] == word2[j]
+// dp[i][j] = 
+//           \ min{dp[i-1][j], dp[i][j-1], dp[i-1][j-1]} + 1, word1[i] != word2[j]
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        const int n = word1.size();
+        const int m = word2.size();
+        if (0 == n)
+            return m;
+        if (0 == m)
+            return n;
+        
+        vector<vector<int> > dp(n, vector<int>(m, 0));
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = 0; j < m; ++j)
+            {
+                if (word1[i] == word2[j])
+                    dp[i][j] = (0 == i) ? j : ((0 == j) ? i : dp[i-1][j-1]);
+                else
+                    dp[i][j] = min(min((0 == i) ? j+1 : dp[i-1][j], (0 == j) ? i+1 : dp[i][j-1]), 
+                                   (0 == i) ? j : ((0 == j) ? i : dp[i-1][j-1])) + 1;
+            }
+        }
+        return dp[n-1][m-1];
     }
 };
