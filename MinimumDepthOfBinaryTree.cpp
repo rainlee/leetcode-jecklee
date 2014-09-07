@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for binary tree
  * struct TreeNode {
@@ -33,6 +55,7 @@ public:
  * 法2：递归 + 剪枝
  * DFS 记录当前的mindep
  * 从根向叶子遍历，超过mindep则break
+ * 自顶向下
  ***/
 class Solution {
 public:
@@ -58,11 +81,8 @@ private:
         
         if ((NULL == root->left) && (NULL == root->right))
         {
-            if (dep < mindep)
-            {
-                mindep = dep;
-                return;
-            }
+            mindep = min(mindep, dep);
+            return;
         }
         
         minDep(root->left, dep);
