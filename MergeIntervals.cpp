@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /**
  * Definition for an interval.
  * struct Interval {
@@ -37,5 +59,45 @@ public:
         }
         vret.push_back(cur);  // caution: the last interval!!!
         return vret;
+    }
+};
+
+// 直接在原intervals基础上进行merge
+// 若当前区间和last相离，则更新当前区间为last
+// 若包含或者相交，合并，取end较大值，删除当前区间
+bool cmpIntv(const Interval &i1, const Interval &i2)
+{
+    return (i1.start < i2.start);
+}
+class Solution {
+public:
+    vector<Interval> merge(vector<Interval> &intervals) {
+        if (intervals.size() < 2)
+            return intervals;
+        
+        sort(intervals.begin(), intervals.end(), cmpIntv);
+        
+        int start = intervals[0].start;
+        int end = intervals[0].end;
+        for (int i = 1; i < intervals.size(); )
+        {
+            if (end < intervals[i].start)
+            {
+                start = intervals[i].start;
+                end = intervals[i].end;
+                ++i;   // move on
+            }
+            else
+            {
+                if (end < intervals[i].end)
+                {
+                    end = intervals[i].end;
+                    intervals[i-1].end = end;
+                }
+                // else end stays still
+                intervals.erase(intervals.begin() + i);
+            }
+        }
+        return intervals;
     }
 };
