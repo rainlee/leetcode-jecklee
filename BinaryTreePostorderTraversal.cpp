@@ -152,3 +152,116 @@ private:
         reverseTreeList(end, start);   // reduce
     }
 };
+
+/**********************************************************/
+// 后序遍历 左右根
+// 逆序就是 根右左，观察发现，恰好是前序遍历的对称形式
+// 所以可以用类似前序遍历的方法，先求出根右左，然后逆序
+/*
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode *root) {
+        if (!root)
+            return vtree;
+        reversePreorderTree(root);
+        reverse(vtree.begin(), vtree.end());
+        return vtree;
+    }
+private:
+    vector<int> vtree;
+    void reversePreorderTree(TreeNode *root)
+    {
+        if (!root)
+            return;
+        
+        vtree.push_back(root->val);
+        reversePreorderTree(root->right);
+        reversePreorderTree(root->left);
+        return;
+    }
+};
+*/
+
+/*
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode *root) {
+        if (!root)
+            return vtree;
+        reversePreorderTree(root);
+        reverse(vtree.begin(), vtree.end());
+        return vtree;
+    }
+private:
+    vector<int> vtree;
+    
+    void reversePreorderTree(TreeNode *root)
+    {
+        if (!root)
+            return;
+        
+        stack<TreeNode *> stree;
+        TreeNode *node = root;
+        while (node || !stree.empty())
+        {
+            while (node)
+            {
+                vtree.push_back(node->val);
+                stree.push(node);
+                node = node->right;
+            }
+            node = stree.top();
+            stree.pop();
+            node = node->left;
+        }
+        return;
+    }
+};
+*/
+
+// morris
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode *root) {
+        if (!root)
+            return vtree;
+        reversePreorderTree(root);
+        reverse(vtree.begin(), vtree.end());
+        return vtree;
+    }
+private:
+    vector<int> vtree;
+    
+    void reversePreorderTree(TreeNode *root)
+    {
+        if (!root)
+            return;
+        
+        TreeNode *node = root;
+        while (node)
+        {
+            if (!node->right)
+            {
+                vtree.push_back(node->val);
+                node = node->left;
+            }
+            else
+            {
+                TreeNode *tmp = node->right;
+                while ((NULL != tmp->left) && (node != tmp->left))
+                    tmp = tmp->left;
+                if (!tmp->left)
+                {
+                    vtree.push_back(node->val);
+                    tmp->left = node;
+                    node = node->right;
+                }
+                else
+                {
+                    tmp->left = NULL;
+                    node = node->left;
+                }
+            }
+        }
+    }
+};
