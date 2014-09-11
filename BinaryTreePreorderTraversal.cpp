@@ -88,6 +88,7 @@ private:
  * 接着右孩子入栈、左孩子入栈
  * 然后处理左子树，即出栈，栈为空退出
  ***/
+/*
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode *root) {
