@@ -104,51 +104,40 @@ private:
  * 先node入队，然后邻居依次入队
  * 为避免重复复制，用一个map记录已经分配的节点
  * 注意：复制node 和 neighbors之前，都需要查重
+ * 入队时复制点，出队时复制边
  ***/
 class Solution {
 public:
     UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
-        if (NULL == node)
+        if (!node)
             return NULL;
         
-        unordered_map<int, UndirectedGraphNode *> mgraph;  // (label, node)
-        queue<UndirectedGraphNode *> qgraph;               // queue for BFS
-        qgraph.push(node);
-        
-        while (!qgraph.empty())
+        unordered_map<UndirectedGraphNode *, UndirectedGraphNode *> mgraph;
+        queue<UndirectedGraphNode *> q;
+        q.push(node);
+        mgraph[node] = new UndirectedGraphNode(node->label);
+        while (!q.empty())
         {
-            UndirectedGraphNode *curnode = qgraph.front();
-            qgraph.pop();
-            
-            // clone cur node
-            UndirectedGraphNode *clonenode = NULL;
-            if (mgraph.find(curnode->label) != mgraph.end())
-                clonenode = mgraph[curnode->label];
-            else
-            {
-                clonenode = new UndirectedGraphNode(curnode->label);
-                mgraph[curnode->label] = clonenode;
-            }
-            
-            // clone neighbors
-            vector<UndirectedGraphNode *> &nghs = curnode->neighbors;
-            if (!(clonenode->neighbors).empty())  // has been cloned
+            UndirectedGraphNode *cur = q.front();
+            q.pop();
+            UndirectedGraphNode *newcur = mgraph[cur];
+            if (!newcur->neighbors.empty())
                 continue;
-            for (int i = 0; i < nghs.size(); ++i)
+            
+            for (int i = 0; i < cur->neighbors.size(); ++i)
             {
-                qgraph.push(nghs[i]);    // push the ith ngh
-                
-                UndirectedGraphNode *ngh = NULL;
-                if (mgraph.find(nghs[i]->label) != mgraph.end())
-                    ngh = mgraph[nghs[i]->label];
+                UndirectedGraphNode *newngh = NULL;
+                if (mgraph.find(cur->neighbors[i]) != mgraph.end())
+                    newngh = mgraph[cur->neighbors[i]];
                 else
                 {
-                    ngh = new UndirectedGraphNode(nghs[i]->label);
-                    mgraph[ngh->label] = ngh;
+                    newngh = new UndirectedGraphNode(cur->neighbors[i]->label);
+                    mgraph[cur->neighbors[i]] = newngh;
                 }
-                (clonenode->neighbors).push_back(ngh);
+                newcur->neighbors.push_back(newngh);
+                q.push(cur->neighbors[i]);
             }
-        } // end of while
-        return mgraph[node->label];
+        }
+        return mgraph[node];
     }
 };
