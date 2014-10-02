@@ -1,3 +1,25 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
 /***
  * 法1：模拟
  *      枚举起点，时间复杂度O(n^2)
@@ -31,5 +53,38 @@ public:
             }
         }
         return (sum < 0) ? -1 : istart;
+    }
+};
+
+/***
+ * 法2：双指针，一个指向起点，一个指向终点
+ * 当left>=0时，说明可以从start到达end，则end往后走
+ * 当left< 0时，说明不能到达，则start往反方向走
+ * 最后left>=0，表示可以到达
+ ***/
+class Solution {
+public:
+    int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
+        if (gas.empty() || (gas.size() != cost.size()))
+            return -1;
+        
+        const int n = gas.size();
+        int start = n;
+        int end = 0;
+        int left = 0;
+        while (start != end)
+        {
+            if (left >= 0)
+            {
+                left += gas[end] - cost[end];
+                ++end;
+            }
+            else
+            {
+                --start;
+                left += gas[start] - cost[start];
+            }
+        }
+        return (left < 0) ? -1 : (start%n);
     }
 };
