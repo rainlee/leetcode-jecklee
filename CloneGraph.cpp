@@ -88,10 +88,8 @@ public:
         UndirectedGraphNode *clonenode = new UndirectedGraphNode(node->label);
         mgraph[node] = clonenode;
         for (int i = 0; i < (node->neighbors).size(); ++i)
-        {
-            UndirectedGraphNode *ngh = cloneGraph((node->neighbors)[i]);
-            (clonenode->neighbors).push_back(ngh);
-        }
+            (clonenode->neighbors).push_back(cloneGraph((node->neighbors)[i]));
+
         return clonenode;
     }
 private:
