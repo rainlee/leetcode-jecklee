@@ -38,7 +38,7 @@ public:
  *              <               , 这时候当前i位置最少给1个
  * 若last > 1，则足够，更新last=1，maxv保持不变
  *        =  , 前面分少了，需要补齐[maxi, i)
- * 若maxv足够大 maxv > maxi - i，则直接补齐(maxi, i) 每个补一颗
+ * 若maxv足够大 maxv > i - maxi，则直接补齐(maxi, i) 每个补一颗
  *                   <=        ，则不够补，maxv++，[maxi, i) 每个补一颗
  ***/
 class Solution {
