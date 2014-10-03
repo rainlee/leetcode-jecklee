@@ -31,6 +31,15 @@ public:
  * 不需要记录每个孩子得到的糖果数目，只需要记录前一个孩子得到的糖果数last和
  * 当前孩子之前rating取极大值的孩子位置maxi，以及该位置上孩子的糖果数maxv。
  * 通过这个maxi和maxv，就可以判断需不要补糖果，以及补几颗。
+ *
+ * 记录极大值maxv 及索引maxi 上一个元素值last
+ * 当ratings[i] > ratings[i-1]时，增加maxv 更新last
+ *              =               , maxv = last = 1
+ *              <               , 这时候当前i位置最少给1个
+ * 若last > 1，则足够，更新last=1，maxv保持不变
+ *        =  , 前面分少了，需要补齐[maxi, i)
+ * 若maxv足够大 maxv > maxi - i，则直接补齐(maxi, i) 每个补一颗
+ *                   <=        ，则不够补，maxv++，[maxi, i) 每个补一颗
  ***/
 class Solution {
 public:
