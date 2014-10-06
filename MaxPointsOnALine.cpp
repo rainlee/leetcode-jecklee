@@ -91,7 +91,7 @@ public:
         {
             int samep = 1;     // same with points[i]
             int maxcnt = 0;    // max points in same line
-            unordered_map<double, int> mslope;  // slope - cnt
+            vector<double> vslope;  // slopes
             for (int j = i+1; j < points.size(); ++j)
             {
                 double slope = 0;
@@ -101,11 +101,54 @@ public:
                     continue;
                 }
                 else if (points[j].x == points[i].x)
-                    slope = std::numeric_limits<double>::infinity();
+                    slope = std::numeric_limits<double>::max();
                 else
                     slope = (double)(points[j].y - points[i].y) / (points[j].x - points[i].x);
-                ++mslope[slope];
+                vslope.push_back(slope);
                 maxcnt = max(maxcnt, mslope[slope]);
+            }
+            maxp = max(maxp, samep + maxcnt);
+        }
+        return maxp;
+    }
+};
+
+// 枚举穿过某点的所有直线
+// 不用map了，之间把所有的斜率存下来，然后排序，找出斜率相同最大的
+// 时间复杂度O(n^2 * logn) 空间复杂度O(n)
+const double EPSILON = 0.000001;
+class Solution {
+public:
+    int maxPoints(vector<Point> &points) {
+        if (points.size() < 3)
+            return points.size();
+        
+        int maxp = 0;
+        for (int i = 0; i < points.size(); ++i)
+        {
+            int samep = 1;
+            int maxcnt = 0;
+            vector<double> vslope;  // slope
+            for (int j = i+1; j < points.size(); ++j)
+            {
+                double slope = 0;
+                if ((points[j].x == points[i].x) && (points[j].y == points[i].y))
+                {
+                    ++samep;
+                    continue;
+                }
+                else if (points[j].x == points[i].x)
+                    slope = numeric_limits<double>::max();
+                else
+                    slope = (double)(points[j].y - points[i].y) / (points[j].x - points[i].x);
+                vslope.push_back(slope);
+            }
+            sort(vslope.begin(), vslope.end());
+            for (int i = 0, j = 0; i < vslope.size(); i = j)
+            {
+                while ((j < vslope.size()) && (abs(vslope[j] - vslope[i]) <= EPSILON))
+                    ++j;
+                maxcnt = max(maxcnt, j - i);
             }
             maxp = max(maxp, samep + maxcnt);
         }
