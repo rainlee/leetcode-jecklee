@@ -72,3 +72,35 @@ private:
         return;
     }
 };
+
+/***
+ * 法3：模拟加法
+ * 1表示选，0表示不选，则0 ~ 2^n-1 则刚好对应子集
+ * 直接将相应的数转换成子集就可以了
+ * 注意先排序
+ ***/
+class Solution {
+public:
+    vector<vector<int> > subsets(vector<int> &S) {
+        sort(S.begin(), S.end());
+        const int n = S.size();
+        int maxn = 1 << n;
+        for (int i = 0; i < maxn; ++i)
+            convertIntToSet(i, S);
+        return vsets;
+    }
+private:
+    vector<vector<int> > vsets;
+    void convertIntToSet(int k, vector<int> &S)
+    {
+        vector<int> set;
+        int index = 0;    // index in S
+        for (int i = k; i > 0; i >>= 1)
+        {
+            if (i & 0x1)  // 1 means choose
+                set.push_back(S[index]);
+            ++index;
+        }
+        vsets.push_back(set);
+    }
+};
