@@ -29,3 +29,25 @@ private:
                visitBST(root->right, root->val, high);      // update the bound
     }
 };
+
+/***
+ * 中序遍历，递增序列
+ * 记录上一个节点
+ ***/
+class Solution {
+public:
+    bool isValidBST(TreeNode *root) {
+        int last = INT_MIN;
+        return inorder(root, last);
+    }
+private:
+    bool inorder(TreeNode *root, int &last) {
+        if (!root) return true;
+        if (!inorder(root->left, last))
+            return false;
+        if (root->val <= last)
+            return false;
+        last = root->val;
+        return inorder(root->right, last);
+    }
+};
