@@ -80,3 +80,38 @@ public:
         return vvmatrix;
     }
 };
+
+// 法3：如果只要求打印，不用保存，以下算法可以达到空间O(1)
+// 通过坐标(x,y)计算该位置的值
+// 首先计算出当前在第几层c
+// 然后计算出该层左上角第一个数的大小lefttop
+// 得到当前环的边长l
+// (x,y)换算成相对于lefttop的坐标(i,j)
+// 判断在上下左右哪条边上，然后计算
+class Solution {
+public:
+    vector<vector<int> > generateMatrix(int n) {
+        vector<vector<int> > matrix(n, vector<int>(n));
+        for (int i = 0; i < n; ++i)
+            for (int j = 0; j < n; ++j)
+                matrix[i][j] = getNum(i, j, n);
+        return matrix;
+    }
+private:
+    int getNum(int x, int y, int n)
+    {
+        int c = min(min(x, n-x-1), min(y, n-y-1));  // 第几层,从0开始
+        int lefttop = 1 + 4*c*(n-c);  // 每层有4*(n-2*c+1)个
+        int l = n - 2*c;
+        int i = x - c;
+        int j = y - c;
+        if (i == 0)        // up
+            return lefttop + j;
+        else if (j == 0)   // left
+            return lefttop + 4*(l-1) - i;
+        else if (i == l-1) // down
+            return lefttop + 3*l - j - 3;  // lefttop + 2*(l-1) + (l-j+1);
+        else               // right
+            return lefttop + l + i - 1;
+    }
+};
