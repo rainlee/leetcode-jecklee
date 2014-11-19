@@ -1,3 +1,26 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
+
 /***
  * 同Spiral Matrix模拟
  ***/
@@ -113,5 +136,35 @@ private:
             return lefttop + 3*l - j - 3;  // lefttop + 2*(l-1) + (l-j+1);
         else               // right
             return lefttop + l + i - 1;
+    }
+};
+
+/***
+ * 法4：用一个方向数组辅助模拟，简化代码
+ * 每次(x,y)在当前方向上走一步(nx,ny)
+ * 若(nx,ny)越界，则该方向已经走完，换下一个方向
+ ***/
+class Solution {
+public:
+    vector<vector<int> > generateMatrix(int n) {
+        vector<vector<int> > matrix(n, vector<int>(n, 0));
+        const int dxy[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // directions
+        int x = 0, y = 0;
+        int d = 0;  // cur direction
+        for (int i = 1; i <= n*n; ++i)
+        {
+            matrix[x][y] = i;
+            int nx = x + dxy[d][0];
+            int ny = y + dxy[d][1];
+            if ((nx < 0) || (nx >= n) || (ny < 0) || (ny >= n) || (matrix[nx][ny] != 0))
+            {
+                d = (d + 1) % 4;  // next direction
+                nx = x + dxy[d][0];
+                ny = y + dxy[d][1];
+            }
+            x = nx;
+            y = ny;
+        }
+        return matrix;
     }
 };
