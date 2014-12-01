@@ -1,3 +1,26 @@
+/*
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                  O\  =  /O
+               ____/`---'\____
+             .'  \\|     |//  `.
+            /  \\|||  :  |||//  \
+           /  _||||| -:- |||||-  \
+           |   | \\\  -  /// |   |
+           | \_|  ''\---/''  |   |
+           \  .-\__  `-`  ___/-. /
+         ___`. .'  /--.--\  `. . __
+      ."" '<  `.___\_<|>_/___.'  >'"".
+     | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+     \  \ `-.   \_ __\ /__ _/   .-` /  /
+======`-.____`-.___\_____/___.-`____.-'======
+                   `=---='
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         God Bless Me     BUG Free Forever
+*/
+
 /***
  * 模拟法，画'Z'字
  * 用cnt计数，垂直方向有nRows个
@@ -65,5 +88,54 @@ public:
             }
         }
         return szz;
+    }
+};
+
+// 方法同上
+/*
+class Solution {
+public:
+    string convert(string s, int nRows) {
+        if (0 == nRows) return "";
+        if (1 == nRows) return s;
+        
+        vector<string> vzzg(nRows, "");
+        const int n = s.size();
+        int k = 0;
+        while (k < n)
+        {
+            for (int i = 0; (i < nRows) && (k < n); ++i)
+                vzzg[i] += s[k++];
+            for (int i = nRows-2; (i > 0) && (k < n); --i)
+                vzzg[i] += s[k++];
+        }
+        string sres;
+        for (int i = 0; i < nRows; ++i)
+            sres += vzzg[i];
+        return sres;
+    }
+};
+*/
+class Solution {
+public:
+    string convert(string s, int nRows) {
+        if (0 == nRows) return "";
+        if (1 == nRows) return s;
+        
+        const int n = s.size();
+        string sres;
+        for (int i = 0; i < nRows; ++i)
+        {
+            int k = i;
+            while (k < n)
+            {
+                sres += s[k];  // cur
+                int i1 = k + (nRows - i - 1)*2; // next in this line
+                if ((i != 0) && (i != nRows-1) && (i1 < n))
+                    sres += s[i1];
+                k += (nRows - 1)*2;
+            }
+        }
+        return sres;
     }
 };
