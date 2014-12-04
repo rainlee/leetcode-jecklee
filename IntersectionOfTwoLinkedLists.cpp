@@ -141,3 +141,39 @@ private:
         return;
     }
 };
+
+/***
+ * 法3：
+ * 两个单链表相交成 Y 字型，两个指针分别从链表头往后遍历
+ * 遍历到尾，则从另一个链表的头再开始遍历
+ * 若链表相交，则两指针刚好相遇在交点处（都走完了Y字的三条边）
+ ***/
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        if (!headA || !headB) return NULL;
+        ListNode *node1 = headA;
+        ListNode *node2 = headB;
+        bool twice1 = false, twice2 = false;
+        while ((node1 && node2) || (!node1 && twice1) || (node2 && twice2))
+        {
+            if (twice1 && twice2 && (node1 == node2))
+                return node1;
+            if (!node1->next && !twice1)
+            {
+                twice1 = true;
+                node1 = headB;
+            }
+            else
+                node1 = node1->next;
+            if (!node2->next && !twice2)
+            {
+                twice2 = true;
+                node2 = headA;
+            }
+            else
+                node2 = node2->next;
+        }
+        return NULL;
+    }
+};
